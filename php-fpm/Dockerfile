@@ -1114,6 +1114,18 @@ RUN if [ ${INSTALL_XMLRPC} = true ]; then \
 ;fi
 
 ###########################################################################
+# PHP GRPC EXTENSION
+###########################################################################
+
+ARG INSTALL_PHPGRPC=false
+
+RUN if [ ${INSTALL_PHPGRPC} = true ]; then \
+    printf "\n" | pecl install -o -f grpc \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable grpc \
+;fi
+
+###########################################################################
 # PHP DECIMAL:
 ###########################################################################
 
@@ -1318,6 +1330,7 @@ RUN groupmod -o -g ${PGID} www-data && \
 RUN if [ ${INSTALL_FAKETIME} = true ]; then \
     echo "/usr/lib/x86_64-linux-gnu/faketime/libfaketime.so.1" > /etc/ld.so.preload \
 ;fi
+
 
 # Configure locale.
 ARG LOCALE=POSIX

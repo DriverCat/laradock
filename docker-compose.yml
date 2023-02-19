@@ -179,6 +179,7 @@ services:
           - http_proxy
           - https_proxy
           - no_proxy
+          - INSTALL_PHPGRPC=${WORKSPACE_INSTALL_PHPGRPC}
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - docker-in-docker:/certs/client
@@ -296,6 +297,7 @@ services:
           - http_proxy
           - https_proxy
           - no_proxy
+          - INSTALL_PHPGRPC=${PHP_FPM_INSTALL_PHPGRPC}
       volumes:
         - ./php-fpm/php${PHP_VERSION}.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
@@ -440,8 +442,12 @@ services:
       depends_on:
         - php-fpm
       networks:
-        - frontend
-        - backend
+        frontend:
+          aliases:
+            - project.local
+        backend:
+          aliases:
+            - project.local
 
 ### OpenResty Server #########################################
     openresty:
