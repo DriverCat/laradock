@@ -444,10 +444,10 @@ services:
       networks:
         frontend:
           aliases:
-            - project.local
+            - api-staging.benefitty.local
         backend:
           aliases:
-            - project.local
+            - api-staging.benefitty.local
 
 ### OpenResty Server #########################################
     openresty:
@@ -623,7 +623,7 @@ services:
         args:
           - POSTGRES_VERSION=${POSTGRES_VERSION}
       volumes:
-        - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
+        - ${DATA_PATH_HOST}/postgres_data:/var/lib/postgresql/data
         - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
       ports:
         - "${POSTGRES_PORT}:5432"
@@ -1048,14 +1048,16 @@ services:
         - xpack.security.enabled=false
         - xpack.security.transport.ssl.enabled=false
         - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-        - cluster.initial_master_nodes=laradock-node
+        - ELASTICSEARCH_HEAP_SIZE=4g
+        - discovery.zen.minimum_master_nodes=1
+        - discovery.type=single-node
       ulimits:
         memlock:
           soft: -1
           hard: -1
         nofile:
-          soft: 65536
-          hard: 65536
+          soft: 262144
+          hard: 262144
       ports:
         - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
         - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
